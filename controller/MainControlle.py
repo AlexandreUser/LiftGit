@@ -12,8 +12,17 @@ import requests
 app = Flask('project')
 app.config['SECRET_KEY'] = 'random'
 app.debug = True
-
 @app.route("/",methods=["GET","POST"])
+def init():
+    if request.method == "GET":
+      	return render_template("form_wizards.html")
+
+@app.route("/home",methods=["GET","POST"])
 def index():
     if request.method == "GET":
       	return render_template("index.html")
+
+@app.route("/add/repository",methods=["GET","POST"])
+def addRepo():
+    if request.method == "GET":
+      	return render_template("form.html")
