@@ -12,6 +12,13 @@ import requests
 app = Flask('project')
 app.config['SECRET_KEY'] = 'random'
 app.debug = True
+@app.route("/show/repository", methods=["GET","POST"])
+def showRepo():
+	if request.method == "GET":
+		path = request.args.get("path")
+		myCmd = os.popen('cd '+path+' && ls').read()
+		myCmd = myCmd.split("\n")
+		return str(myCmd)
 @app.route("/",methods=["GET","POST"])
 def init():
     if request.method == "GET":
