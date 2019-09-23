@@ -17,6 +17,8 @@
     <link href="/static/vendors/nprogress/nprogress.css" rel="stylesheet">
 
     <!-- Custom Theme Style -->
+        <script src="/static/vendors/jquery/dist/jquery.min.js"></script>
+
     <link href="/static/build/css/custom.min.css" rel="stylesheet">
   </head>
 
@@ -276,22 +278,56 @@
                             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">Repositories path: <span class="required">*</span>
                             </label>
                             <div class="col-md-6 col-sm-6 col-xs-12">
-                              <input type="text"   webkitdirectory directory id="repo-name" required="required" class="form-control col-md-8 col-xs-12">
+                              <input type="text"   id="repo-name" required="required" class="form-control col-md-8 col-xs-12">
                             </div>
                           </div>
                         </form>
 
                       </div>
-                      <div id="step-2">
-                        <h2 class="StepTitle">Step 2 Content</h2>
-                        <p>
-                          do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                          fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                      <script type="text/javascript">
+                        
+                       $('#clickMeFriend').click(function(){
+                            getGit()
+                        });
+                        function getGit(){
+                          var path = document.getElementById("repo-name").value;
+                          var oReq = new XMLHttpRequest();
+                          oReq.onload = function(){
+                            console.log(this.responseText)
+                            texts = this.responseText.substring(1,this.responseText.length-1)
+                            texts = texts.split("'").join('')
+                            texts =texts.split(", ")
+                            console.log()
+                            var tbl     = document.createElement("table");
+                            tbl.className = "table"
+                            var tblBody = document.createElement("tbody");
+
+                            for (var i=0;i<texts.length;i++){
+                                var row = document.createElement("tr");
+                                var p = document.createElement("p")
+                                var br = document.createElement("br")
+                                var cell = document.createElement("td");
+                                var cellText = document.createTextNode( i+" - "+texts[i]);
+                                cell.appendChild(cellText);   
+                                row.appendChild(cell);
+                     
+                                                          tblBody.appendChild(row);
+
+                            }
+
+                            tbl.appendChild(tblBody);
+                            document.getElementById("load_git").appendChild(tbl);
+
+                          };
+                          oReq.open("get", "/show/repository?path="+path, true);
+                          oReq.send();
+                        }
+                      </script>
+                      <div id="step-2" style="height: 400px;">
+                        <h2 class="StepTitle">Are those your repositories ?</h2>
+                        <p id="load_git">
                         </p>
-                        <p>
-                          Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor
-                          in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                        </p>
+                      
                       </div>
                       <div id="step-3">
                         <h2 class="StepTitle">Step 3 Content</h2>
@@ -341,6 +377,13 @@
     <!-- Custom Theme Scripts -->
     <script src="/static/build/js/custom.min.js"></script>
 
-	
+	   <script type="text/javascript">
+      setTimeout(function(){
+        document.getElementsByClassName("buttonNext")[0].onclick = function(){
+          getGit()
+        }
+
+      })
+     </script>
   </body>
 </html>
