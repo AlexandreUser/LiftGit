@@ -261,15 +261,7 @@
                                           </span>
                           </a>
                         </li>
-                        <li>
-                          <a href="#step-4">
-                            <span class="step_no">4</span>
-                            <span class="step_descr">
-                                              Step 4<br />
-                                              <small>Start</small>
-                                          </span>
-                          </a>
-                        </li>
+                        
                       </ul>
                       <div id="step-1">
                         <form class="form-horizontal form-label-left">
@@ -285,42 +277,60 @@
 
                       </div>
                       <script type="text/javascript">
-                        
+                        counter = 0
                        $('#clickMeFriend').click(function(){
                             getGit()
                         });
+                       function returnGit(){
+                        counter -= 1
+                       }
                         function getGit(){
-                          var path = document.getElementById("repo-name").value;
-                          var oReq = new XMLHttpRequest();
-                          oReq.onload = function(){
-                            console.log(this.responseText)
-                            texts = this.responseText.substring(1,this.responseText.length-1)
-                            texts = texts.split("'").join('')
-                            texts =texts.split(", ")
-                            console.log()
-                            var tbl     = document.createElement("table");
-                            tbl.className = "table"
-                            var tblBody = document.createElement("tbody");
+                          if(counter == 1){
+                            window.location.href = "http://localhost:5000/home";
 
-                            for (var i=0;i<texts.length;i++){
-                                var row = document.createElement("tr");
-                                var p = document.createElement("p")
-                                var br = document.createElement("br")
-                                var cell = document.createElement("td");
-                                var cellText = document.createTextNode( i+" - "+texts[i]);
-                                cell.appendChild(cellText);   
-                                row.appendChild(cell);
-                     
-                                                          tblBody.appendChild(row);
+                          }
 
-                            }
+                          if (counter == 0 ){
+                            var path = document.getElementById("repo-name").value;
+                            var oReq = new XMLHttpRequest();
+                            oReq.onload = function(){
+                              console.log(this.responseText)
+                              texts = this.responseText.substring(1,this.responseText.length-1)
+                              texts = texts.split("'").join('')
+                              texts =texts.split(", ")
+                              console.log()
+                              var tbl     = document.createElement("table");
+                              tbl.className = "table"
+                              var tblBody = document.createElement("tbody");
 
-                            tbl.appendChild(tblBody);
-                            document.getElementById("load_git").appendChild(tbl);
+                              for (var i=0;i<texts.length;i++){
+                                  var row = document.createElement("tr");
+                                  var p = document.createElement("p")
+                                  var br = document.createElement("br")
+                                  var cell = document.createElement("td");
+                                  var cellText = document.createTextNode( i+" - "+texts[i]);
+                                  if(texts[i].length > 1){
+                                     $.post( "/create/branch?path="+path+"/"+texts[i]+"&gitname="+texts[i], function( data ) {
+                                        console.log(data)
+                                    }); 
+                                  }
+                                  
+                                  cell.appendChild(cellText);   
+                                  row.appendChild(cell);
+                            
+                                                            tblBody.appendChild(row);
 
-                          };
-                          oReq.open("get", "/show/repository?path="+path, true);
-                          oReq.send();
+                              }
+
+                              tbl.appendChild(tblBody);
+                              document.getElementById("load_git").appendChild(tbl);
+
+                            };
+                            oReq.open("get", "/show/repository?path="+path, true);
+                            oReq.send();
+                          }
+                          counter +=1
+
                         }
                       </script>
                       <div id="step-2" style="height: 400px;">
@@ -330,15 +340,11 @@
                       
                       </div>
                       <div id="step-3">
-                        <h2 class="StepTitle">Step 3 Content</h2>
+                        <h2 class="StepTitle">Alright, let's go</h2>
                         <p>
-                          sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore
-                          eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                          Now that you've marked your repositories, you can manage your commits and merges on the main page and on the repository page 
                         </p>
-                        <p>
-                          Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor
-                          in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                        </p>
+                       
                       </div>
                      
 
@@ -382,7 +388,9 @@
         document.getElementsByClassName("buttonNext")[0].onclick = function(){
           getGit()
         }
-
+        document.getElementsByClassName("buttonPrevious")[0].onclick = function(){
+          returnGit()
+        }
       })
      </script>
   </body>
